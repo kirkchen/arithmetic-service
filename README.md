@@ -1,5 +1,7 @@
 # Work assignment - arithmetic service
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/kirkchen/arithmetic-service)
+
 ## Brief
 Our game designer has decided that kids should be able to calculate arithmetic in the Toca Life: World app. 
 

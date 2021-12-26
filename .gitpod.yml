@@ -1,0 +1,14 @@
+# extensions
+vscode:
+  extensions:
+    - humao.rest-client
+
+# exposed ports
+ports:
+  - port: 3000
+    onOpen: open-preview
+
+# start up tasks
+tasks:
+  - init: yarn
+  - command: yarn start:dev
