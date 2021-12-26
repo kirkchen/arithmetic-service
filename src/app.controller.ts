@@ -1,14 +1,14 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { AppService } from './app.service';
+import { CalculatorService } from './calculator/calculator.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly calculatorService: CalculatorService) {}
 
   @Get(':expression')
   calculate(@Param('expression') expression: string): string {
     // Get the expression from the path param
     // Use the calculator service to calculate the answer
-    return 'Not implemented yet';
+    return this.calculatorService.calculate(expression);
   }
 }
