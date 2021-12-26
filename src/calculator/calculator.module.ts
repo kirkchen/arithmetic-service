@@ -1,7 +1,15 @@
-import { Module } from '@nestjs/common';
-import { Divide, Minus, Multiply, Plus } from './operators';
+import { Module, Provider } from '@nestjs/common';
+import { Divide, Minus, Multiply, Plus, Operators } from './operators';
 import { ExpressionParser, RPNCalculator } from './utils';
 import { CalculatorService } from './calculator.service';
+
+const operators = [Plus, Minus, Multiply, Divide];
+
+export const OperatorsProvider: Provider = {
+  provide: Operators,
+  useFactory: (...operators) => new Operators(operators),
+  inject: operators,
+};
 
 @Module({
   imports: [],
@@ -9,25 +17,15 @@ import { CalculatorService } from './calculator.service';
     CalculatorService,
     ExpressionParser,
     RPNCalculator,
-    Plus,
-    Minus,
-    Multiply,
-    Divide,
-    {
-      provide: 'Operators',
-      useFactory: (...operators) => operators,
-      inject: [Plus, Minus, Multiply, Divide],
-    },
+    ...operators,
+    OperatorsProvider,
   ],
   exports: [
     CalculatorService,
     ExpressionParser,
     RPNCalculator,
-    Plus,
-    Minus,
-    Multiply,
-    Divide,
-    'Operators',
+    ...operators,
+    OperatorsProvider,
   ],
 })
 export class CalculatorModule {}

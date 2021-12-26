@@ -1,13 +1,9 @@
-import { Inject } from '@nestjs/common';
-import { IOperator } from '../operators';
-import { find } from 'ramda';
+import { Operators } from '../operators';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class RPNCalculator {
-  constructor(@Inject('Operators') private readonly operators: IOperator[]) {}
-
-  private getOperator(token: string) {
-    return find<IOperator>((i) => i.symbol === token)(this.operators);
-  }
+  constructor(private readonly operators: Operators) {}
 
   calculate(tokens: string[]): string {
     tokens = tokens.reverse();
@@ -16,7 +12,7 @@ export class RPNCalculator {
     while (tokens.length > 0) {
       const a = tokens.pop();
 
-      if (!this.getOperator(a)) {
+      if (!this.operators.isOperator(a)) {
         stack.push(a);
       } else {
         // not enough values on stack
@@ -26,7 +22,7 @@ export class RPNCalculator {
           const c = Number(stack.pop());
           const b = Number(stack.pop());
 
-          stack.push(this.getOperator(a).execute(b, c));
+          stack.push(this.operators.getOperator(a).execute(b, c));
         }
       }
     }

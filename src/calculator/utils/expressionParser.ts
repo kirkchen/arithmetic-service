@@ -1,11 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   both,
   complement,
   concat,
   equals,
   filter,
-  find,
   is,
   join,
   map,
@@ -13,17 +12,13 @@ import {
   replace,
   split,
 } from 'ramda';
-import { IOperator, OperatorAssociativity } from '../operators';
+import { IOperator, OperatorAssociativity, Operators } from '../operators';
 
 const isNumeric = pipe(Number, both(is(Number), complement(equals(NaN))));
 
 @Injectable()
 export class ExpressionParser {
-  constructor(@Inject('Operators') private readonly operators: IOperator[]) {}
-
-  private getOperator(token: string) {
-    return find<IOperator>((i) => i.symbol === token)(this.operators);
-  }
+  constructor(private readonly operators: Operators) {}
 
   private parseExpressionToArray(expression: string): string[] {
     return pipe(
@@ -35,7 +30,7 @@ export class ExpressionParser {
           map<string, string>(concat('\\')),
           join(''),
           (splitters) => new RegExp(`([${splitters}])`, 'g'),
-        )(this.operators),
+        )(this.operators.getAllOperators()),
       ),
       filter((i) => !!i),
     )(expression);
@@ -54,9 +49,9 @@ export class ExpressionParser {
         continue;
       }
 
-      const operator = this.getOperator(token);
+      const operator = this.operators.getOperator(token);
       if (operator) {
-        let previousOperator = this.getOperator(
+        let previousOperator = this.operators.getOperator(
           operatorStack[operatorStack.length - 1],
         );
         while (
@@ -67,7 +62,7 @@ export class ExpressionParser {
               operator.precedence < previousOperator.precedence))
         ) {
           output.push(operatorStack.pop());
-          previousOperator = this.getOperator(
+          previousOperator = this.operators.getOperator(
             operatorStack[operatorStack.length - 1],
           );
         }

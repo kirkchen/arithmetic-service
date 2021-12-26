@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RPNCalculator } from './rpnCalculator';
-import { Divide, Minus, Multiply, Plus } from '../operators';
+import { CalculatorModule } from '../calculator.module';
 
 const testSet = [
   [['3', '5', '+'], '8'],
@@ -13,23 +13,7 @@ describe('RPNCalculator', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        RPNCalculator,
-        Plus,
-        Minus,
-        Multiply,
-        Divide,
-        {
-          provide: 'Operators',
-          useFactory: (plus, minus, multiply, divide) => [
-            plus,
-            minus,
-            multiply,
-            divide,
-          ],
-          inject: [Plus, Minus, Multiply, Divide],
-        },
-      ],
+      imports: [CalculatorModule],
     }).compile();
 
     rpnCalculator = module.get<RPNCalculator>(RPNCalculator);

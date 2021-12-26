@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExpressionParser } from './expressionParser';
-import { Divide, Minus, Multiply, Plus } from '../operators';
+import { CalculatorModule } from '../calculator.module';
 
 const testSet = [
   ['3+5', ['3', '5', '+']],
@@ -16,23 +16,7 @@ describe('ExpressionParser', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ExpressionParser,
-        Plus,
-        Minus,
-        Multiply,
-        Divide,
-        {
-          provide: 'Operators',
-          useFactory: (plus, minus, multiply, divide) => [
-            plus,
-            minus,
-            multiply,
-            divide,
-          ],
-          inject: [Plus, Minus, Multiply, Divide],
-        },
-      ],
+      imports: [CalculatorModule],
     }).compile();
 
     parser = module.get<ExpressionParser>(ExpressionParser);
