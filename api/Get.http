@@ -1,0 +1,14 @@
+GET {{host}}/(3+5)
+Accept: application/json
+
+###
+
+GET {{host}}/(3+5)/(4-2)
+Accept: application/json
+
+###
+
+GET {{host}}/(5*(3+1)-2)*(3+1)
+Accept: application/json
+
+###
